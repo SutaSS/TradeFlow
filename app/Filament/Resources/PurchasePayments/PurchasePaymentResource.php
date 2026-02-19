@@ -10,6 +10,7 @@ use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
@@ -50,6 +51,10 @@ class PurchasePaymentResource extends Resource
                         'failed' => 'Failed',
                     ])
                     ->default('pending'),
+                Hidden::make('paid_by')
+                    ->default(fn() => auth()->id()),
+                Hidden::make('received_by')
+                    ->default(fn() => auth()->id()),
             ]);
     }
 
@@ -77,6 +82,7 @@ class PurchasePaymentResource extends Resource
                         'pending' => 'warning',
                         'success' => 'success',
                         'failed' => 'danger',
+                        default => 'gray',
                     }),
                 TextColumn::make('created_at')
                     ->dateTime()

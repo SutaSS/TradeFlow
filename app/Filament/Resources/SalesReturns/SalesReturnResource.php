@@ -11,6 +11,7 @@ use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
@@ -40,20 +41,28 @@ class SalesReturnResource extends Resource
                     ->searchable()
                     ->preload(),
                 TextInput::make('subtotal')
-                    ->required()
+                    ->default(0)
                     ->numeric()
                     ->inputMode('decimal')
-                    ->readOnly(),
+                    ->live()
+                    ->afterStateUpdated(function ($get, $set) {
+                        $set('total_amount', floatval($get('subtotal') ?? 0) + floatval($get('tax') ?? 0));
+                    }),
                 TextInput::make('tax')
-                    ->required()
+                    ->default(0)
                     ->numeric()
                     ->inputMode('decimal')
-                    ->readOnly(),
+                    ->live()
+                    ->afterStateUpdated(function ($get, $set) {
+                        $set('total_amount', floatval($get('subtotal') ?? 0) + floatval($get('tax') ?? 0));
+                    }),
                 TextInput::make('total_amount')
-                    ->required()
+                    ->default(0)
                     ->numeric()
                     ->inputMode('decimal')
                     ->readOnly(),
+                Hidden::make('signed_by')
+                    ->default(fn() => auth()->id()),
             ]);
     }
 

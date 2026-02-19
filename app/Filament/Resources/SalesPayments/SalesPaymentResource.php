@@ -10,6 +10,7 @@ use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
@@ -67,6 +68,10 @@ class SalesPaymentResource extends Resource
                         'failed' => 'Failed',
                     ])
                     ->default('pending'),
+                Hidden::make('received_by')
+                    ->default(fn() => auth()->id()),
+                Hidden::make('paid_by')
+                    ->default(fn() => auth()->id()),
             ]);
     }
 
@@ -93,6 +98,7 @@ class SalesPaymentResource extends Resource
                     ->color(fn (string $state): string => match ($state) {
                         'manual' => 'info',
                         'xendit' => 'success',
+                        default => 'gray',
                     }),
                 TextColumn::make('status')
                     ->badge()
@@ -100,6 +106,7 @@ class SalesPaymentResource extends Resource
                         'pending' => 'warning',
                         'success' => 'success',
                         'failed' => 'danger',
+                        default => 'gray',
                     }),
                 TextColumn::make('created_at')
                     ->dateTime()

@@ -9,8 +9,6 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Get;
-use Filament\Forms\Set;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
@@ -30,7 +28,7 @@ class DetailsRelationManager extends RelationManager
                     ->searchable()
                     ->preload()
                     ->live()
-                    ->afterStateUpdated(function (Get $get, Set $set, $state) {
+                    ->afterStateUpdated(function ($get, $set, $state) {
                         $product = \App\Models\Product::find($state);
                         if ($product) {
                             $set('price', $product->price);
@@ -46,7 +44,7 @@ class DetailsRelationManager extends RelationManager
                     ->minValue(1)
                     ->default(1)
                     ->live()
-                    ->afterStateUpdated(function (Get $get, Set $set, $state) {
+                    ->afterStateUpdated(function ($get, $set, $state) {
                         $price = $get('price') ?? 0;
                         $discount = $get('discount') ?? 0;
                         $set('total_price', ($price * $state) - $discount);
@@ -57,7 +55,7 @@ class DetailsRelationManager extends RelationManager
                     ->numeric()
                     ->prefix('IDR')
                     ->live()
-                    ->afterStateUpdated(function (Get $get, Set $set, $state) {
+                    ->afterStateUpdated(function ($get, $set, $state) {
                         $qty = $get('qty') ?? 1;
                         $discount = $get('discount') ?? 0;
                         $set('total_price', ($state * $qty) - $discount);
@@ -68,7 +66,7 @@ class DetailsRelationManager extends RelationManager
                     ->prefix('IDR')
                     ->default(0)
                     ->live()
-                    ->afterStateUpdated(function (Get $get, Set $set, $state) {
+                    ->afterStateUpdated(function ($get, $set, $state) {
                         $price = $get('price') ?? 0;
                         $qty = $get('qty') ?? 1;
                         $set('total_price', ($price * $qty) - $state);

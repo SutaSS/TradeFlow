@@ -11,6 +11,7 @@ use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -37,16 +38,13 @@ class PurchaseRequisitionResource extends Resource
                 DatePicker::make('required_date')
                     ->required()
                     ->label('Required Date'),
-                Select::make('requested_by')
-                    ->relationship('requestedBy', 'name')
-                    ->required()
-                    ->searchable()
-                    ->preload(),
+                Hidden::make('requested_by')
+                    ->default(fn() => auth()->id()),
                 Select::make('approved_by')
                     ->relationship('approvedBy', 'name')
-                    ->required()
                     ->searchable()
-                    ->preload(),
+                    ->preload()
+                    ->placeholder('Select approver (optional)'),
                 Select::make('status')
                     ->required()
                     ->options([
@@ -81,6 +79,7 @@ class PurchaseRequisitionResource extends Resource
                         'Pending' => 'info',
                         'Approved' => 'success',
                         'Rejected' => 'danger',
+                        default => 'gray',
                     }),
                 TextColumn::make('created_at')
                     ->dateTime()

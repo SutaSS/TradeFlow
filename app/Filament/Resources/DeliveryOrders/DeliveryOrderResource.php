@@ -11,6 +11,7 @@ use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -38,11 +39,8 @@ class DeliveryOrderResource extends Resource
                 DatePicker::make('do_date')
                     ->required()
                     ->label('Delivery Date'),
-                Select::make('delivered_by')
-                    ->relationship('deliveredBy', 'name')
-                    ->required()
-                    ->searchable()
-                    ->preload(),
+                Hidden::make('delivered_by')
+                    ->default(fn() => auth()->id()),
             ]);
     }
 
