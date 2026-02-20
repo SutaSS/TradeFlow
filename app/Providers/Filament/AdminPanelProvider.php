@@ -18,16 +18,35 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use App\Filament\Widgets\DashboardAdminWidget;
+use App\Filament\Widgets\DashboardSalesWidget;
+use App\Filament\Widgets\DashboardPurchaseWidget;
 
 class AdminPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
+        $widgets = [];
+
+        // Configure widgets based on user role
+        if (auth()->check()) {
+            $role = auth()->user()->role;
+
+            if ($role === 'admin') {
+                $widgets = [DashboardAdminWidget::class];
+            } elseif ($role === 'sales') {
+                $widgets = [DashboardSalesWidget::class];
+            } elseif ($role === 'purchase') {
+                $widgets = [DashboardPurchaseWidget::class];
+            }
+        }
+
         return $panel
             ->default()
             ->id('admin')
             ->path('admin')
             ->login()
+            ->brandName(config('app.name', 'TradeFlow'))
             ->colors([
                 'primary' => Color::Amber,
             ])
@@ -52,6 +71,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')
             ->widgets([
+                ...$widgets,
                 AccountWidget::class,
                 FilamentInfoWidget::class,
             ])
@@ -71,3 +91,4 @@ class AdminPanelProvider extends PanelProvider
             ]);
     }
 }
+
