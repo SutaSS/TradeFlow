@@ -35,4 +35,9 @@ return [
         ],
     ],
 
+    'xendit' => [
+        'secret_key' => env('XENDIT_SECRET_KEY'),
+        'api_url' => env('XENDIT_API_URL', 'https://api.xendit.co'),
+    ],
+
 ];

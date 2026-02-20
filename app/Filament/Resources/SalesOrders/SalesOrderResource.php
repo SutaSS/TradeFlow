@@ -10,6 +10,7 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\Action;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
@@ -143,6 +144,14 @@ class SalesOrderResource extends Resource
             ->actions([
                 EditAction::make(),
                 DeleteAction::make(),
+                Action::make('markAsPaid')
+                    ->label('Mark as Paid')
+                    ->icon('heroicon-o-check-circle')
+                    ->action(function ($record) {
+                        $record->update(['status' => 'Paid']);
+                    })
+                    ->requiresConfirmation()
+                    ->color('success'),
             ])
             ->bulkActions([
                 BulkActionGroup::make([

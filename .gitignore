@@ -24,3 +24,6 @@ Homestead.yaml
 Thumbs.db
 Database.md
 Flow.md
+test_invoice.php
+test_payment.php
+verify_setup.php

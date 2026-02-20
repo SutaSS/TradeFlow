@@ -20,6 +20,9 @@ class SalesInvoice extends Model
         'total_amount',
         'signed_by',
         'status',
+        'xendit_invoice_id',
+        'payment_status',
+        'payment_url',
     ];
 
     protected $casts = [

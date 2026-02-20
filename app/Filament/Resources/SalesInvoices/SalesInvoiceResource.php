@@ -71,7 +71,7 @@ class SalesInvoiceResource extends Resource
                     ->inputMode('decimal')
                     ->readOnly(),
                 Hidden::make('signed_by')
-                    ->default(fn() => auth()->id()),
+                    ->default(fn(): int|string|null => auth()->id()),
                 Select::make('status')
                     ->required()
                     ->options([
@@ -127,6 +127,12 @@ class SalesInvoiceResource extends Resource
                     ->icon('heroicon-o-printer')
                     ->url(fn (SalesInvoice $record) => route('invoice.print', $record))
                     ->openUrlInNewTab(),
+                Action::make('requestPayment')
+                    ->label('Request Payment')
+                    ->icon('heroicon-o-credit-card')
+                    ->url(fn (SalesInvoice $record) => route('payment.initiate', $record->sales_invoice_id))
+                    ->openUrlInNewTab()
+                    ->visible(fn (SalesInvoice $record) => $record->payment_status === 'unpaid'),
                 DeleteAction::make(),
             ])
             ->bulkActions([
